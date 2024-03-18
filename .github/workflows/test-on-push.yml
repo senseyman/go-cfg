@@ -1,0 +1,26 @@
+name: Go Lint and Test on Push
+
+on:
+  push:
+    branches:
+      - master
+      - feature/**
+
+jobs:
+  build-and-test:
+    name: Lint and Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: 1.21.0 # Adjust this to your project's Go version
+
+      - name: Check out code
+        uses: actions/checkout@v3
+
+      - name: Lint
+        run: make lint
+
+      - name: Test
+        run: make test
