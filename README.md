@@ -1,5 +1,8 @@
 # Go Config
 
+[![Test status](https://github.com/senseyman/go-cfg/actions/workflows/test-on-push.yml/badge.svg)](https://github.com/senseyman/go-cfg/actions/workflows/test-on-push.yml)
+
+
 The `go-cfg` package is used for mapping ENV variables to your config struct with default options.
 
 
