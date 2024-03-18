@@ -21,6 +21,10 @@ jobs:
 
       - name: Lint
         run: make lint
+        env:
+          GOPATH: ${{ github.workspace }}/go
 
       - name: Test
         run: make test
+        env:
+          GOPATH: ${{ github.workspace }}/go
