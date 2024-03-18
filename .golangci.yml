@@ -1,0 +1,60 @@
+linters-settings:
+  errcheck:
+    check-type-assertions: true
+    check-blank: true
+  gofmt:
+    simplify: true
+  golint:
+    min-confidence: 0.8
+  goconst:
+    min-len: 3
+    min-occurrences: 3
+
+linters:
+  enable:
+    - govet
+    - errcheck
+    - staticcheck
+    - unused
+    - gosimple
+    - ineffassign
+    - typecheck
+    - gofmt
+    - goimports
+    - goconst
+    - gocyclo
+    - misspell
+    - lll
+    - unparam
+    - nakedret
+    - prealloc
+    - gocritic
+    - gochecknoinits
+    - gochecknoglobals
+    - gocognit
+    - godox
+    - gomnd
+
+  disable:
+    - wsl
+
+issues:
+  exclude-use-default: false
+  exclude-rules:
+    - linters:
+        - govet
+        - golint
+      text: "should have comment or be unexported" # Exclude warnings about unexported types/functions lacking comments
+
+  max-issues-per-linter: 0
+  max-same-issues: 0
+
+run:
+  deadline: 5m
+
+  issues-exit-code: 1
+
+  skip-dirs:
+    - vendor
+    - .git
+    - node_modules
