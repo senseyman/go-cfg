@@ -1,5 +1,7 @@
 GOLINT := golangci-lint
 
+all: dep lint test
+
 dep:
 	go mod tidy
 	go mod download

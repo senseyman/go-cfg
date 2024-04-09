@@ -18,7 +18,7 @@ const (
 	defaultEnvFileName    = ".env"
 )
 
-func Read(config interface{}, opts ...viper.DecoderConfigOption) error {
+func Read(config any, opts ...viper.DecoderConfigOption) error {
 	viperInstance := viper.New()
 	viperInstance.SetEnvKeyReplacer(strings.NewReplacer(viperDefaultDelimiter, "_"))
 
@@ -31,7 +31,8 @@ func Read(config interface{}, opts ...viper.DecoderConfigOption) error {
 
 	viperInstance.AutomaticEnv()
 	viperInstance.SetTypeByDefaultValue(true)
-	err := setDefaultValues("", viperInstance, reflect.StructField{}, reflect.ValueOf(config).Elem())
+	elem := reflect.ValueOf(config).Elem()
+	err := setDefaultValues("", viperInstance, &reflect.StructField{}, &elem)
 	if err != nil {
 		return errors.WithMessage(err, "failed to apply default values")
 	}
@@ -43,7 +44,7 @@ func Read(config interface{}, opts ...viper.DecoderConfigOption) error {
 }
 
 func setDefaultValues(parentName string, viperInstance *viper.Viper,
-	reflectField reflect.StructField, reflectValue reflect.Value) error {
+	reflectField *reflect.StructField, reflectValue *reflect.Value) error {
 	if reflectValue.Kind() == reflect.Struct {
 		envValue, ok := reflectField.Tag.Lookup(structureTagName)
 		if ok && envValue != squashTagValue {
@@ -53,8 +54,10 @@ func setDefaultValues(parentName string, viperInstance *viper.Viper,
 			parentName += strings.ToUpper(envValue)
 		}
 		for i := 0; i < reflectValue.NumField(); i++ {
+			typeField := reflectValue.Type().Field(i)
+			field := reflectValue.Field(i)
 			if err := setDefaultValues(parentName, viperInstance,
-				reflectValue.Type().Field(i), reflectValue.Field(i)); err != nil {
+				&typeField, &field); err != nil {
 				return err
 			}
 		}

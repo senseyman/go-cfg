@@ -1,4 +1,3 @@
-// nolint:errcheck
 package config
 
 import (
@@ -6,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 type (
@@ -13,7 +13,7 @@ type (
 		LogLevel     string       `mapstructure:"LOG_LEVEL"    def:"DEBUG"`
 		DebugMode    bool         `mapstructure:"DEBUG_MODE"   def:"true"`
 		ID           string       `mapstructure:"ID"`
-		DbTestStruct testDBStruct `mapstructure:"DB"`
+		DBTestStruct testDBStruct `mapstructure:"DB"`
 	}
 
 	testDBStruct struct {
@@ -37,7 +37,7 @@ func TestRead(t *testing.T) {
 				LogLevel:  "DEBUG",
 				DebugMode: true,
 				ID:        "",
-				DbTestStruct: testDBStruct{
+				DBTestStruct: testDBStruct{
 					Host: "127.0.0.1",
 					Port: 1234,
 				},
@@ -51,7 +51,7 @@ func TestRead(t *testing.T) {
 				LogLevel:  "INFO",
 				DebugMode: true,
 				ID:        "",
-				DbTestStruct: testDBStruct{
+				DBTestStruct: testDBStruct{
 					Host: "127.0.0.1",
 					Port: 4321,
 				},
@@ -68,7 +68,7 @@ func TestRead(t *testing.T) {
 				LogLevel:  "INFO",
 				DebugMode: false,
 				ID:        "000999",
-				DbTestStruct: testDBStruct{
+				DBTestStruct: testDBStruct{
 					Host: "192.168.0.1",
 					Port: 5555,
 				},
@@ -88,7 +88,7 @@ func TestRead(t *testing.T) {
 				LogLevel:  "DEBUG",
 				DebugMode: false,
 				ID:        "",
-				DbTestStruct: testDBStruct{
+				DBTestStruct: testDBStruct{
 					Host: "127.0.0.1",
 					Port: 1234,
 				},
@@ -110,9 +110,9 @@ func TestRead(t *testing.T) {
 			err := Read(&tc.input)
 
 			if tc.hasErr {
-				assert.Error(t, err)
+				require.Error(t, err)
 			} else {
-				assert.NoError(t, err)
+				require.NoError(t, err)
 			}
 
 			assert.EqualValues(t, tc.expected, tc.input)
@@ -120,7 +120,6 @@ func TestRead(t *testing.T) {
 	}
 }
 
-// nolint
 func resetEnvs() {
 	os.Unsetenv("LOG_LEVEL")
 	os.Unsetenv("DEBUG_MODE")
